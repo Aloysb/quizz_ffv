@@ -5,6 +5,8 @@ void main() {
 }
 
 class App extends StatelessWidget {
+  List<String> answers = ['Answer A', 'Answer B', 'Answer C', 'Answer D'];
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -42,20 +44,30 @@ class App extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      RaisedButton(
-                        child: Text('Answer 1'),
-                        onPressed: () => '',
-                      ),
-                      Text('Answer 2'),
-                      Text('Answer 3'),
-                      Text('Answer 4'),
-                    ],
+                    children:
+                        answers.map((answer) => Answer(text: answer)).toList(),
                   ),
                 ),
               ),
             ],
           )),
+    );
+  }
+}
+
+class Answer extends StatelessWidget {
+  const Answer({
+    Key key,
+    String this.text,
+  }) : super(key: key);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return RaisedButton(
+      child: Text(text),
+      onPressed: () => '',
     );
   }
 }
