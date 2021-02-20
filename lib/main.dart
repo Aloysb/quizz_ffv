@@ -41,12 +41,7 @@ class App extends StatelessWidget {
               ),
               Expanded(
                 child: Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children:
-                        answers.map((answer) => Answer(text: answer)).toList(),
-                  ),
+                  child: AnswersList(answers: answers),
                 ),
               ),
             ],
@@ -55,19 +50,65 @@ class App extends StatelessWidget {
   }
 }
 
+class AnswersList extends StatefulWidget {
+  AnswersList({@required this.answers});
+  final List<String> answers;
+
+  @override
+  _AnswersListState createState() => _AnswersListState();
+}
+
+class _AnswersListState extends State<AnswersList> {
+  List<bool> _selectedAnswer = [false, false, false, false];
+
+  void selectAnswer(int index) {
+    setState(() {
+      _selectedAnswer[index] = _selectedAnswer[index] == true ? false : true;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: widget.answers.asMap().entries.map((entry) {
+          int idx = entry.key;
+          String answer = entry.value;
+
+          return Answer(
+              text: answer,
+              isSelected: _selectedAnswer[idx],
+              selectAnswer: () => selectAnswer(idx));
+        }).toList(),
+      ),
+    );
+  }
+}
+
 class Answer extends StatelessWidget {
-  const Answer({
-    Key key,
-    String this.text,
-  }) : super(key: key);
+  const Answer(
+      {Key key,
+      @required this.isSelected,
+      @required this.text,
+      @required this.selectAnswer})
+      : super(key: key);
 
   final String text;
+  final Function selectAnswer;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
     return RaisedButton(
-      child: Text(text),
-      onPressed: () => '',
-    );
+        child: Text(
+          text,
+          style: TextStyle(color: isSelected ? Colors.green : Colors.blue),
+        ),
+        onPressed: () {
+          selectAnswer();
+        });
   }
 }
