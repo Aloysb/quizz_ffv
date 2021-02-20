@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:csv/csv.dart';
+import 'package:flutter/services.dart' show rootBundle;
+
+List<List<dynamic>> data = [];
 
 void main() {
   runApp(App());
@@ -109,6 +113,16 @@ class Answer extends StatelessWidget {
         ),
         onPressed: () {
           selectAnswer();
+          loadAsset() async {
+            final myData = await rootBundle.loadString('asset/data.csv');
+            print(myData);
+          }
+
+          loadAsset();
+
+          List<List<dynamic>> rowsAsListOfValues =
+              const CsvToListConverter().convert('assets/data/data.csv');
+          print(rowsAsListOfValues);
         });
   }
 }
