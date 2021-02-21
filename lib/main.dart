@@ -50,7 +50,7 @@ class App extends AppMVC {
               RaisedButton(
                   child: Text('hello'),
                   onPressed: () {
-                    print(_con.data);
+                    // print(_con.data);
                   }),
               Expanded(
                 child: Container(
@@ -161,10 +161,12 @@ class Model {
     print('initializing the Model');
 
     loadAsset() async {
-      var data_from_csv = await rootBundle.loadString("assets/data/data.csv");
+      final String dataFromCsv =
+          await rootBundle.loadString("assets/data/data.csv");
       List<List<dynamic>> csvTable =
-          CsvToListConverter().convert(data_from_csv);
+          CsvToListConverter(eol: '\n').convert(dataFromCsv);
       this._data = csvTable;
+      print(_data);
     }
 
     loadAsset();
