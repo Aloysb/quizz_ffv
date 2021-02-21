@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/services.dart' show rootBundle;
-
-List<List<dynamic>> data = [];
+import 'package:mvc_pattern/mvc_pattern.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(App());
 }
 
-class App extends StatelessWidget {
+class App extends AppMVC {
+  App({Key key}) : super(key: key);
+
   List<String> answers = ['Answer A', 'Answer B', 'Answer C', 'Answer D'];
+
+  Controller _con = Controller();
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +47,11 @@ class App extends StatelessWidget {
               Container(
                 child: Text('Question 1:'),
               ),
+              RaisedButton(
+                  child: Text('hello'),
+                  onPressed: () {
+                    print(_con.data);
+                  }),
               Expanded(
                 child: Container(
                   child: AnswersList(answers: answers),
@@ -113,16 +122,55 @@ class Answer extends StatelessWidget {
         ),
         onPressed: () {
           selectAnswer();
-          loadAsset() async {
-            final myData = await rootBundle.loadString('asset/data.csv');
-            print(myData);
-          }
-
-          loadAsset();
-
-          List<List<dynamic>> rowsAsListOfValues =
-              const CsvToListConverter().convert('assets/data/data.csv');
-          print(rowsAsListOfValues);
         });
   }
+}
+
+class Controller extends ControllerMVC {
+  Model _mod;
+
+  /// Singleton Factory
+  factory Controller() {
+    return Controller._();
+  }
+
+  /// Private constructor
+  Controller._() {
+    print('Initializing the controller');
+    //Initialize the Model
+    this._mod = Model();
+  }
+
+  List<dynamic> get data => _mod.data;
+
+  void incrementCounter() {
+    /// The Controller knows how to 'talk to' the Model. It knows the name, but Model does the work.
+    Model._incrementCounter();
+  }
+}
+
+class Model {
+  List<List<dynamic>> _data;
+  List<dynamic> get data => _data[0];
+
+  factory Model() {
+    return Model._();
+  }
+
+  Model._() {
+    print('initializing the Model');
+
+    loadAsset() async {
+      var data_from_csv = await rootBundle.loadString("assets/data/data.csv");
+      List<List<dynamic>> csvTable =
+          CsvToListConverter().convert(data_from_csv);
+      this._data = csvTable;
+    }
+
+    loadAsset();
+  }
+
+  static int get counter => _counter;
+  static int _counter = 0;
+  static int _incrementCounter() => ++_counter;
 }
