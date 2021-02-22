@@ -8,12 +8,11 @@ void main() {
   runApp(App());
 }
 
-class App extends AppMVC {
+class App extends StatelessWidget {
   App({Key key}) : super(key: key);
 
-  List<String> answers = ['Answer A', 'Answer B', 'Answer C', 'Answer D'];
-
   Controller _con = Controller();
+  List<String> answers;
 
   @override
   Widget build(BuildContext context) {
@@ -45,12 +44,13 @@ class App extends AppMVC {
           body: Column(
             children: [
               Container(
-                child: Text('Question 1:'),
+                child: Text(_con.currentQuestion),
               ),
               RaisedButton(
-                  child: Text('hello'),
+                  child: Text('Start'),
                   onPressed: () {
-                    // print(_con.data);
+                    _con.getNextQuestion();
+                    _con.getNextAnswers();
                   }),
               Expanded(
                 child: Container(
@@ -127,8 +127,6 @@ class Answer extends StatelessWidget {
 }
 
 class Controller extends ControllerMVC {
-  Model _mod;
-
   /// Singleton Factory
   factory Controller() {
     return Controller._();
@@ -139,24 +137,39 @@ class Controller extends ControllerMVC {
     print('Initializing the controller');
     //Initialize the Model
     this._mod = Model();
+    this._index = -1;
+    this._currentQuestion = '';
   }
 
-  List<dynamic> get data => _mod.data;
+  Model _mod;
+  int _index;
+  String _currentQuestion;
+  String get currentQuestion => this._currentQuestion;
+  List<String> _currentAnswers;
+  List<String> get currentAnswers => this._currentAnswers;
 
-  void incrementCounter() {
-    /// The Controller knows how to 'talk to' the Model. It knows the name, but Model does the work.
-    Model._incrementCounter();
+  void incrementIndex() {
+    _index++;
+  }
+
+  void getNextQuestion() {
+    incrementIndex();
+    this._currentQuestion = _mod.getQuestion(_index);
+    print(this._currentQuestion);
+  }
+
+  void getNextAnswers() {
+    this._currentAnswers = _mod.getAnswers(_index);
   }
 }
 
 class Model {
-  List<List<dynamic>> _data;
-  List<dynamic> get data => _data[0];
-
+  //Singleton Factory
   factory Model() {
     return Model._();
   }
 
+  //Private Constructor
   Model._() {
     print('initializing the Model');
 
@@ -164,15 +177,25 @@ class Model {
       final String dataFromCsv =
           await rootBundle.loadString("assets/data/data.csv");
       List<List<dynamic>> csvTable =
-          CsvToListConverter(eol: '\n').convert(dataFromCsv);
+          CsvToListConverter(fieldDelimiter: ',', eol: '\n')
+              .convert(dataFromCsv);
       this._data = csvTable;
-      print(_data);
+      this._questionIndex = 1;
+      this._answersIndexes = [2, 4, 6, 8];
     }
 
     loadAsset();
   }
 
-  static int get counter => _counter;
-  static int _counter = 0;
-  static int _incrementCounter() => ++_counter;
+  List<List<dynamic>> _data;
+  int _questionIndex;
+  List<int> _answersIndexes;
+
+  String getQuestion(int index) {
+    return _data[index][1];
+  }
+
+  List<String> getAnswers(int index) {
+    _answersIndexes.map((answerIndex) => _data[index][answerIndex]);
+  }
 }
