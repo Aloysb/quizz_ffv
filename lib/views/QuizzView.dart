@@ -14,10 +14,22 @@ class _QuizzViewState extends StateMVC {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          child: Text(Controller.currentQuestion),
+        Expanded(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            child: Center(
+              child: Text(
+                Controller.currentQuestion,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 32.0,
+                ),
+              ),
+            ),
+          ),
         ),
         Expanded(
+          flex: 2,
           child: Container(
             child: AnswersList(answers: Controller.currentAnswers),
           ),
@@ -26,7 +38,11 @@ class _QuizzViewState extends StateMVC {
           child: Text(Controller.index < 1 ? 'Start' : 'Next question'),
           onPressed: () {
             setState(() {
-              Controller.getNextQuestion();
+              Controller.index < 1
+                  ? Controller.startQuiz('météo', 'brevet initial', 10)
+                  : Controller.currentAnswersValidated
+                      ? Controller.getNextQuestion()
+                      : Controller.validateAnswers();
             });
           },
         ),
@@ -76,18 +92,72 @@ class Answer extends StatefulWidget {
 class _AnswerState extends State<Answer> {
   @override
   Widget build(BuildContext context) {
-    return RaisedButton(
-        child: Text(
-          widget.text,
-          style: TextStyle(
-              color: Controller.isSelected(widget.idx)
-                  ? Colors.green
-                  : Colors.blue),
-        ),
-        onPressed: () {
-          setState(() {
-            Controller.selectAnswer(widget.idx);
-          });
-        });
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 8.0),
+      child: OutlinedButton(
+          style: OutlinedButton.styleFrom(
+            shape: StadiumBorder(),
+            padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            side: BorderSide(
+                color: Controller.isSelected(widget.idx)
+                    ? Colors.purpleAccent[700]
+                    : Colors.grey[400],
+                width: 1),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 20.0,
+                height: 20.0,
+                decoration: BoxDecoration(
+                  color: Controller.isSelected(widget.idx)
+                      ? Colors.green
+                      : Colors.white,
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                      color: Controller.isSelected(widget.idx)
+                          ? Colors.purpleAccent
+                          : Colors.black,
+                      width: 1),
+                ),
+                child: Controller.isSelected(widget.idx)
+                    ? Container(
+                        child:
+                            Icon(Icons.check, size: 16.0, color: Colors.white),
+                      )
+                    : Container(),
+              ),
+              SizedBox(
+                width: 10.0,
+              ),
+              Expanded(
+                child: Text(
+                  widget.text,
+                  style: TextStyle(
+                    color: Controller.isSelected(widget.idx)
+                        ? Colors.green
+                        : Colors.blue,
+                    fontSize: 16.0,
+                  ),
+                ),
+              ),
+              Text(
+                Controller.currentAnswersPoint[widget.idx] ?? '',
+                style: TextStyle(
+                  color: int.parse(Controller.currentAnswersPoint[widget.idx] ??
+                              '0') >
+                          0
+                      ? Colors.green
+                      : Colors.red,
+                ),
+              ),
+            ],
+          ),
+          onPressed: () {
+            setState(() {
+              Controller.selectAnswer(widget.idx);
+            });
+          }),
+    );
   }
 }
