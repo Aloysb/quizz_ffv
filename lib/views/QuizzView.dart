@@ -17,83 +17,77 @@ class _QuizzViewState extends StateMVC {
         Container(
           child: Text(Controller.currentQuestion),
         ),
+        Expanded(
+          child: Container(
+            child: AnswersList(answers: Controller.currentAnswers),
+          ),
+        ),
         RaisedButton(
-            child: Text('Start'),
-            onPressed: () {
-              Controller.incrementIndex();
+          child: Text(Controller.index < 1 ? 'Start' : 'Next question'),
+          onPressed: () {
+            setState(() {
               Controller.getNextQuestion();
-              print(Controller.index);
-              // Controller.getNextAnswers();
-            }),
-        // Expanded(
-        //   child: Container(
-        //     child: AnswersList(answers: Controller.currentAnswers),
-        // ),
-        // ),
+            });
+          },
+        ),
       ],
     );
   }
 }
 
-class AnswersList extends StatefulWidget {
-  AnswersList({@required this.answers});
+class AnswersList extends StatelessWidget {
+  const AnswersList({Key key, @required this.answers}) : super(key: key);
+
   final List<String> answers;
-
-  @override
-  _AnswersListState createState() => _AnswersListState();
-}
-
-class _AnswersListState extends State<AnswersList> {
-  List<bool> _selectedAnswer = [false, false, false, false];
-
-  void selectAnswer(int index) {
-    setState(() {
-      _selectedAnswer[index] = _selectedAnswer[index] == true ? false : true;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: widget.answers.asMap().entries.map((entry) {
-          int idx = entry.key;
-          String answer = entry.value;
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: this.answers.asMap().entries.map(
+            (entry) {
+              int idx = entry.key;
+              String answer = entry.value;
 
-          return Answer(
-              text: 'hello',
-              isSelected: _selectedAnswer[idx],
-              selectAnswer: () => selectAnswer(idx));
-        }).toList(),
-      ),
+              return Answer(text: answer, idx: idx);
+            },
+          ).toList()),
     );
   }
 }
 
-class Answer extends StatelessWidget {
-  const Answer(
-      {Key key,
-      @required this.isSelected,
-      @required this.text,
-      @required this.selectAnswer})
-      : super(key: key);
+class Answer extends StatefulWidget {
+  const Answer({
+    Key key,
+    @required this.text,
+    @required this.idx,
+  }) : super(key: key);
 
   final String text;
-  final Function selectAnswer;
-  final bool isSelected;
+  final int idx;
 
+  @override
+  _AnswerState createState() => _AnswerState();
+}
+
+class _AnswerState extends State<Answer> {
   @override
   Widget build(BuildContext context) {
     return RaisedButton(
         child: Text(
-          'here',
-          style: TextStyle(color: isSelected ? Colors.green : Colors.blue),
+          widget.text,
+          style: TextStyle(
+              color: Controller.isSelected(widget.idx)
+                  ? Colors.green
+                  : Colors.blue),
         ),
         onPressed: () {
-          selectAnswer();
+          setState(() {
+            Controller.selectAnswer(widget.idx);
+          });
         });
   }
 }

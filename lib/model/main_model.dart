@@ -1,6 +1,23 @@
 import 'package:csv/csv.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
+/*
+Un questionnaire est considéré comme réussi si le score est d'au moins 75%.
+
+Suivant les recommandations de la FFVL, chaque série de 10 questions est répartie comme suit :
+météo 30%, réglementation 20%, pilotage 20%, mécavol 20%, matériel 10%.
+
+V: Brevet initial
+B: Brevet pilote
+M: Brevet confirme
+
+N: Materiel
+E: Mecavol
+A: Meteo
+W: Pilotage
+S: Reglementation
+ */
+
 class Model {
   Model() {
     print('initializing the Model');
@@ -22,12 +39,15 @@ class Model {
   static List<List<dynamic>> _data;
   int _questionIndex;
   static List<int> _answersIndexes;
+  static List<int> get answersIndexes => _answersIndexes;
 
   static String getQuestion(int index) {
     return _data[index][1];
   }
 
   static List<String> getAnswers(int index) {
-    _answersIndexes.map((answerIndex) => _data[index][answerIndex]);
+    return _answersIndexes
+        .map((answerIndex) => _data[index][answerIndex].toString())
+        .toList();
   }
 }
