@@ -1,5 +1,6 @@
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:quizz_ffvl/model/main_model.dart';
+import 'dart:math';
 
 class Controller extends ControllerMVC {
   static int _index = 0;
@@ -62,13 +63,13 @@ class Controller extends ControllerMVC {
   static void validateAnswers() {
     _currentAnswersValidated = true;
     _currentAnswersPoint = Model.getPoints(_index);
-    print(_currentAnswersPoint);
-    _currentScore += _selectedAnswers
-        .map((answer) => int.parse(_currentAnswersPoint[answer]))
-        .reduce((a, b) => a + b);
-    if (currentScore < 0) {
-      _currentScore = 0;
-    }
+    _currentScore += _selectedAnswers.length > 0
+        ? max(
+            _selectedAnswers
+                .map((answer) => int.parse(_currentAnswersPoint[answer]))
+                .reduce((a, b) => a + b),
+            0)
+        : 0;
     _maxScore = 6 * _index;
     print(_currentScore);
     print(_maxScore);
@@ -77,7 +78,6 @@ class Controller extends ControllerMVC {
   static void getNextQuestion() {
     incrementIndex();
     resetAnswersPoint();
-    print(_currentAnswers);
     _currentQuestion = Model.getQuestion(_index);
     _currentAnswers = Model.getAnswers(_index);
     _selectedAnswers = [];
@@ -91,7 +91,6 @@ class Controller extends ControllerMVC {
     _selectedAnswers.contains(index)
         ? _selectedAnswers.remove(index)
         : _selectedAnswers.add(index);
-    print(_selectedAnswers);
   }
 
   static bool isSelected(int index) {
