@@ -21,33 +21,50 @@ class Controller extends ControllerMVC {
     'matériel'
   ];
   static List<String> get themesAvailable => _themesAvailable;
-  static List<String> _levelsAvailable = [
-    'brevet initial',
-    'brevet de pilote',
-    'brevet de pilote confirmé',
-    'tous'
-  ];
+  static List<String> _levelsAvailable = ['BI', 'BP', 'BPC', 'ALL'];
   static List<String> get levelsAvailable => _levelsAvailable;
   static bool _currentAnswersValidated = false;
   static bool get currentAnswersValidated => _currentAnswersValidated;
   static List<dynamic> _currentAnswersPoint = [null, null, null, null];
   static List<dynamic> get currentAnswersPoint => _currentAnswersPoint;
-  static int _currentScore;
+  static int _currentScore = 0;
   static int get currentScore => _currentScore;
-  static int _maxScore;
+  static int _maxScore = 1;
   static int get maxScore => _maxScore;
   static int _numberOfQuestions;
   static int get numberOfQuestions => _numberOfQuestions;
+  static int currentScoreInPercentage() {
+    return ((_currentScore.toDouble() / _maxScore.toDouble()) * 100).round();
+  }
+
+  static String _category;
+  static String _level;
 
   Controller() {
+    print('Initialize Controller');
     Model();
   }
 
-  static void startQuiz(
-    String theme,
-    String level,
-    int length,
-  ) {
+  static void setCategory(String category) {
+    _category = category;
+  }
+
+  static void setLevel(String level) {
+    _level = level;
+  }
+
+  static void setNumberOfQuestions(int numberOfQuestions) {
+    _numberOfQuestions = numberOfQuestions;
+  }
+
+  static void startQuiz() {
+    String theme = _category;
+    String level = _level;
+    int length = _numberOfQuestions;
+
+    print(theme);
+    print(level);
+
     if (!themesAvailable.contains(theme) | !levelsAvailable.contains(level)) {
       print('Error, wrong theme or level');
       return;
@@ -55,8 +72,8 @@ class Controller extends ControllerMVC {
 
     _index = 0;
     _currentScore = 0;
-    _numberOfQuestions = length;
     Model.initializeQuiz(theme, level, length);
+    print('here');
     getNextQuestion();
   }
 

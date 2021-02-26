@@ -52,10 +52,10 @@ class Model {
     'matériel': ['E']
   };
   static Map _csvSuffixes = {
-    'brevet initial': ['V'],
-    'brevet de pilote': ['B'],
-    'brevet de pilote confirmé': ['M'],
-    'tous': ['A-Z']
+    'BI': ['V'],
+    'BP': ['B'],
+    'BPC': ['M'],
+    'ALL': ['A-Z']
   };
 
   static String getQuestion(int index) {
@@ -74,12 +74,13 @@ class Model {
     final regex = new RegExp("${prefix}.*${suffix}");
     // final regex = new RegExp(r'${prefix}.*${suffix}');
     final questionsList = _data.where((row) => regex.hasMatch(row[0])).toList();
+    print(regex);
     List<int> randomIndexes = new List<int>.generate(
         questionsList.length, (int index) => index); // [0, 1, 4]
     randomIndexes.shuffle();
     // _currentQuiz =
     _currentQuiz = randomIndexes
-        .sublist(length)
+        .sublist(0, length + 1)
         .map((index) => questionsList[index])
         .toList();
   }
