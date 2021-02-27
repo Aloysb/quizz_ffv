@@ -9,221 +9,269 @@ class QuizzView extends StatefulWidget {
 }
 
 class _QuizzViewState extends StateMVC {
+  PageController _pageController = PageController(initialPage: 0);
+
   _QuizzViewState() : super(Controller());
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(Icons.clear),
-              onPressed: () {
-                Future<void> _showMyDialog() async {
-                  return showDialog<void>(
-                    context: context,
-                    barrierDismissible: true,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Quitter le QCM'),
-                        content: SingleChildScrollView(
-                          child: ListBody(
-                            children: <Widget>[
-                              Text(
-                                  'En quittant le QCM, votre progression sera perdue.'),
-                            ],
-                          ),
-                        ),
-                        actions: <Widget>[
-                          TextButton(
-                              child: Text(
-                                'Continuer',
-                                style: TextStyle(color: Colors.blue),
-                              ),
-                              onPressed: () {}),
-                          TextButton(
-                            child: Text(
-                              'Quitter',
-                              style: TextStyle(color: Colors.red),
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => HomeView(),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }
-
-                _showMyDialog();
-              },
-            );
-          },
-        ),
-      ),
+      appBar: QuizAppBar(),
       body: Container(
         color: Colors.lightBlue[900],
         child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Container(
-                padding: EdgeInsets.only(
-                  left: 12.0,
-                  bottom: 18.0,
-                  top: 18.0,
-                  right: 12.0,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.lightBlue[900],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          'Questions ${Controller.index.toString()}',
-                          style: TextStyle(
-                              fontSize: 24.0,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white),
-                        ),
-                        Text(
-                          '/',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            color: Colors.white70,
-                          ),
-                        ),
-                        Text(
-                          Controller.numberOfQuestions.toString(),
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            color: Colors.white70,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        // Controller.currentScoreInPercentage() < 75
-                        //     ? Icon(
-                        //         Icons.clear,
-                        //         color: Colors.red,
-                        //       )
-                        //     : Icon(
-                        //         Icons.check,
-                        //         color: Colors.green,
-                        //       ),
-                        Text(
-                          '${Controller.currentScoreInPercentage() == 0 && Controller.index == 0 ? "-" : Controller.currentScoreInPercentage().toString()} %',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 25.0,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+              Headers(),
               Expanded(
-                child: Center(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          offset: Offset(0, -1.0),
-                          blurRadius: 5.0,
-                          spreadRadius: 2.0,
-                          color: Colors.black.withOpacity(.2),
-                        ),
-                      ],
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20.0),
-                        topRight: Radius.circular(20.0),
-                      ),
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Colors.white,
-                          Colors.blueGrey[50],
-                        ],
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 30.0, horizontal: 30.0),
-                          decoration: BoxDecoration(),
-                          child: Center(
-                            child: Text(
-                              Controller.currentQuestion,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 22.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Divider(
-                          color: Colors.blue.withOpacity(.5),
-                          indent: 80.0,
-                          endIndent: 80.0,
-                        ),
-                        Expanded(
-                          child: Container(
-                            child:
-                                AnswersList(answers: Controller.currentAnswers),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                child: PageView(
+                  controller: _pageController,
+                  children: [QuestionArea(), QuestionArea()],
                 ),
               ),
-              FlatButton(
-                padding: EdgeInsets.symmetric(
-                  vertical: 16.0,
-                ),
-                child: Center(
-                  child: Text(
-                    Controller.currentAnswersPoint[0] == null
-                        ? 'Valider'
-                        : 'Suivant',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                onPressed: () {
-                  setState(() {
-                    Controller.currentAnswersValidated
-                        ? Controller.getNextQuestion()
-                        : Controller.validateAnswers();
-                  });
-                },
-              ),
+              // QuestionArea(),
+              BottomButton(),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  FlatButton BottomButton() {
+    return FlatButton(
+      padding: EdgeInsets.symmetric(
+        vertical: 16.0,
+      ),
+      child: Center(
+        child: Text(
+          Controller.currentAnswersPoint[0] == null ? 'Valider' : 'Suivant',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24.0,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+      onPressed: () {
+        setState(() {
+          Controller.currentAnswersValidated
+              ? Controller.getNextQuestion()
+              : Controller.validateAnswers();
+        });
+      },
+    );
+  }
+}
+
+class QuestionArea extends StatelessWidget {
+  const QuestionArea({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, -1.0),
+              blurRadius: 5.0,
+              spreadRadius: 2.0,
+              color: Colors.black.withOpacity(.2),
+            ),
+          ],
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.0),
+            topRight: Radius.circular(20.0),
+          ),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white,
+              Colors.blueGrey[50],
+            ],
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 30.0, horizontal: 30.0),
+              decoration: BoxDecoration(),
+              child: Center(
+                child: Text(
+                  Controller.currentQuestion,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 22.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            Divider(
+              color: Colors.blue.withOpacity(.5),
+              indent: 80.0,
+              endIndent: 80.0,
+            ),
+            Expanded(
+              child: Container(
+                child: AnswersList(answers: Controller.currentAnswers),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Headers extends StatelessWidget {
+  const Headers({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(
+        left: 12.0,
+        bottom: 18.0,
+        top: 18.0,
+        right: 12.0,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.lightBlue[900],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Text(
+                'Questions ${Controller.index.toString()}',
+                style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white),
+              ),
+              Text(
+                '/',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.white70,
+                ),
+              ),
+              Text(
+                Controller.numberOfQuestions.toString(),
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.white70,
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              // Controller.currentScoreInPercentage() < 75
+              //     ? Icon(
+              //         Icons.clear,
+              //         color: Colors.red,
+              //       )
+              //     : Icon(
+              //         Icons.check,
+              //         color: Colors.green,
+              //       ),
+              Text(
+                '${Controller.currentScoreInPercentage() == 0 && Controller.index == 0 ? "-" : Controller.currentScoreInPercentage().toString()} %',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 25.0,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class QuizAppBar extends StatelessWidget implements PreferredSizeWidget {
+  @override
+  Size get preferredSize => const Size.fromHeight(100);
+
+  const QuizAppBar({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0.0,
+      leading: Builder(
+        builder: (BuildContext context) {
+          return IconButton(
+            icon: const Icon(Icons.clear),
+            onPressed: () {
+              Future<void> _showMyDialog() async {
+                return showDialog<void>(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Quitter le QCM'),
+                      content: SingleChildScrollView(
+                        child: ListBody(
+                          children: <Widget>[
+                            Text(
+                                'En quittant le QCM, votre progression sera perdue.'),
+                          ],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                            child: Text(
+                              'Continuer',
+                              style: TextStyle(color: Colors.blue),
+                            ),
+                            onPressed: () {}),
+                        TextButton(
+                          child: Text(
+                            'Quitter',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HomeView(),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
+
+              _showMyDialog();
+            },
+          );
+        },
       ),
     );
   }
