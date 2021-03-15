@@ -34,7 +34,7 @@ class _QuizzViewState extends StateMVC {
               Expanded(
                 child: PageView(
                   controller: _pageController,
-                  children: [QuestionArea(), QuestionArea()],
+                  children: Controller.getQuestions(),
                 ),
               ),
               // QuestionArea(),
@@ -72,8 +72,8 @@ class _QuizzViewState extends StateMVC {
   }
 }
 
-class QuestionArea extends StatelessWidget {
-  const QuestionArea({
+class QuestionCard extends StatelessWidget {
+  const QuestionCard({
     Key key,
   }) : super(key: key);
 
