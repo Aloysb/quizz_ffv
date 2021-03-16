@@ -2,6 +2,8 @@ import 'package:csv/csv.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:math';
 
+import 'package:quizz_ffvl/model/question_class.dart';
+
 /*
 NOTE:
 Un questionnaire est considéré comme réussi si le score est d'au moins 75%.
@@ -46,7 +48,7 @@ class Model {
   static List<int> _answersIndexes;
   static List<int> _pointsIndexes;
   static List<int> get answersIndexes => _answersIndexes;
-  static List<Map<String, dynamic>> _currentQuiz;
+  static List<Question> _currentQuiz;
   static Map _csvPrefixes = {
     'général': ['A-Z'],
     'météo': ['A'],
@@ -61,26 +63,11 @@ class Model {
     'ALL': ['A-Z']
   };
 
-  static String getQuestion(int index) {
-    return _currentQuiz[index][1];
+  static Question getQuestion(int index) {
+    return _currentQuiz[index];
   }
 
-  static List<String> getAnswers(int index) {
-    return _answersIndexes
-        .map((answerIndex) => _currentQuiz[index][answerIndex].toString())
-        .toList();
-  }
-
-  //Quiz = Questions[]
-  // question  {
-  //   id: int,
-  //   questions: String,
-  //   answers: String[],
-  //   points: int[]
-  // }
-
-  static List<Map<String, dynamic>> initializeQuiz(
-      String theme, String level, int length) {
+  static List<Question> initializeQuiz(String theme, String level, int length) {
     final prefix = _csvPrefixes[theme];
     final suffix = _csvSuffixes[level];
     final regex = new RegExp("${prefix}.*${suffix}");
@@ -91,19 +78,24 @@ class Model {
         questionsList.length, (int index) => index); // [0, 1, 4]
     randomIndexes.shuffle();
 
-    //TODO: Create a class for the qestions
     _currentQuiz = randomIndexes
         .sublist(0, length + 1)
         .map((index) => questionsList[index])
         .toList()
-        .map((question) => {
-              'id': question[0].replaceAll(new RegExp("\D"), ''),
-              'question': question[1],
-              'answers':
-                  _answersIndexes.map((index) => question[index]).toList(),
-              'points': _pointsIndexes.map((index) => question[index]).toList(),
-            })
-        .toList();
+        .map((question) {
+      String id = question[0].replaceAll(new RegExp("\D"), '');
+      String question_question = question[1];
+      List<dynamic> answers =
+          _answersIndexes.map((index) => question[index]).toList();
+      List<dynamic> points =
+          _pointsIndexes.map((index) => question[index]).toList();
+
+      return Question(
+          id: id,
+          question: question_question,
+          points: points,
+          answers: answers);
+    }).toList();
 
     return _currentQuiz;
   }

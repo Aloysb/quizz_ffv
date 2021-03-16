@@ -2,6 +2,8 @@ import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:quizz_ffvl/model/main_model.dart';
 import 'dart:math';
 
+import 'package:quizz_ffvl/model/question_class.dart';
+
 class Controller extends ControllerMVC {
   // Controller constructor
   Controller() {
@@ -21,9 +23,7 @@ class Controller extends ControllerMVC {
     'mécavol',
     'matériel'
   ];
-  static List<String> get themesAvailable => _themesAvailable;
   static List<String> _levelsAvailable = ['BI', 'BP', 'BPC', 'ALL'];
-  static List<String> get levelsAvailable => _levelsAvailable;
   static String _category;
   static String _level;
 
@@ -35,17 +35,13 @@ class Controller extends ControllerMVC {
     _level = level;
   }
 
-  static List<Map<String, dynamic>> _questions;
+  static List<Question> _questions;
+  static List<Question> get questions => _questions;
 
 //Current index
   static int _index = 0;
   static get index => _index;
   static int incrementIndex() => _index++;
-
-  //Selected answers
-  static List<int> _selectedAnswers = [];
-  static List<int> get selectedAnswers => _selectedAnswers;
-  static bool _currentAnswersValidated = false;
 
   static int _currentScore = 0;
   static int get currentScore => _currentScore;
@@ -66,46 +62,36 @@ class Controller extends ControllerMVC {
     String level = _level;
     int length = _numberOfQuestions;
 
-    if (!themesAvailable.contains(theme) | !levelsAvailable.contains(level)) {
+    if (!_themesAvailable.contains(theme) | !_levelsAvailable.contains(level)) {
       print('Error, wrong theme or level');
       return;
     }
 
     _index = 0;
     _currentScore = 0;
-
     _questions = Model.initializeQuiz(theme, level, length);
-
-    //Add necessary fields to the question
-    _questions.map((question) {
-      question['validated'] = false;
-      question['selectAnswers'] = [];
-    });
   }
 
-  static void validateAnswers() {
-    _currentAnswersValidated = true;
-    _currentAnswersPoint = Model.getPoints(_index);
-    _currentScore += _selectedAnswers.length > 0
+  static void selectAnswer(int questionIndex, int index) {
+    _questions[questionIndex].toggleAnswer(index);
+  }
+
+  static bool isSelected(int questionIndex, int index) {
+    return _questions[questionIndex].selectedAnswers.contains(index);
+  }
+
+  static void validateQuestion(int questionIndex) {
+    List<int> currentAnswersPoint = _questions[questionIndex].points;
+    List<int> selectedAnswers = _questions[questionIndex].selectedAnswers;
+    _questions[questionIndex].validateAnswers();
+
+    _currentScore += selectedAnswers.length > 0
         ? max(
-            _selectedAnswers
-                .map((answer) => int.parse(_currentAnswersPoint[answer]))
+            selectedAnswers
+                .map((answer) => currentAnswersPoint[answer])
                 .reduce((a, b) => a + b),
             0)
         : 0;
     _maxScore = 6 * _index;
-  }
-
-  static void resetAnswersPoint() =>
-      _currentAnswersPoint = [null, null, null, null];
-
-  static void selectAnswer(int index) {
-    _selectedAnswers.contains(index)
-        ? _selectedAnswers.remove(index)
-        : _selectedAnswers.add(index);
-  }
-
-  static bool isSelected(int index) {
-    return _selectedAnswers.contains(index);
   }
 }

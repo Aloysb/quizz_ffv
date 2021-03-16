@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
 import 'package:quizz_ffvl/controller/main_controller.dart';
-import 'package:quizz_ffvl/views/Home.dart';
+
+import 'package:quizz_ffvl/model/question_class.dart';
+
+import 'package:quizz_ffvl/views/component/Headers.dart';
+import 'package:quizz_ffvl/views/component/QuizAppBar.dart';
 
 class QuizzView extends StatefulWidget {
   @override
@@ -34,11 +38,14 @@ class _QuizzViewState extends StateMVC {
               Expanded(
                 child: PageView(
                   controller: _pageController,
-                  children: Controller.getQuestions(),
+                  children: Controller.questions
+                      .map(
+                        (question) => QuestionCard(question: question),
+                      )
+                      .toList(),
                 ),
               ),
-              // QuestionArea(),
-              BottomButton(),
+              BottomButton()
             ],
           ),
         ),
@@ -53,7 +60,8 @@ class _QuizzViewState extends StateMVC {
       ),
       child: Center(
         child: Text(
-          Controller.currentAnswersPoint[0] == null ? 'Valider' : 'Suivant',
+          'Valider',
+          // Controller.currentAnswersPoint[0] == null ? 'Valider' : 'Suivant',
           style: TextStyle(
             color: Colors.white,
             fontSize: 24.0,
@@ -63,9 +71,10 @@ class _QuizzViewState extends StateMVC {
       ),
       onPressed: () {
         setState(() {
-          Controller.currentAnswersValidated
-              ? Controller.getNextQuestion()
-              : Controller.validateAnswers();
+          Controller.validateQuestion(1);
+          // Controller.isQuestionValidated(1)
+          // ? Controller.getNextQuestion()
+          // : Controller.validateAnswers();
         });
       },
     );
@@ -73,9 +82,9 @@ class _QuizzViewState extends StateMVC {
 }
 
 class QuestionCard extends StatelessWidget {
-  const QuestionCard({
-    Key key,
-  }) : super(key: key);
+  const QuestionCard({Key key, Question this.question}) : super(key: key);
+
+  final Question question;
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +120,7 @@ class QuestionCard extends StatelessWidget {
               decoration: BoxDecoration(),
               child: Center(
                 child: Text(
-                  Controller.currentQuestion,
+                  question.question,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 22.0,
@@ -127,7 +136,7 @@ class QuestionCard extends StatelessWidget {
             ),
             Expanded(
               child: Container(
-                child: AnswersList(answers: Controller.currentAnswers),
+                child: AnswersList(question: question),
               ),
             ),
           ],
@@ -137,162 +146,22 @@ class QuestionCard extends StatelessWidget {
   }
 }
 
-class Headers extends StatelessWidget {
-  const Headers({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(
-        left: 12.0,
-        bottom: 18.0,
-        top: 18.0,
-        right: 12.0,
-      ),
-      decoration: BoxDecoration(
-        color: Colors.lightBlue[900],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Text(
-                'Questions ${Controller.index.toString()}',
-                style: TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white),
-              ),
-              Text(
-                '/',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.white70,
-                ),
-              ),
-              Text(
-                Controller.numberOfQuestions.toString(),
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.white70,
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              // Controller.currentScoreInPercentage() < 75
-              //     ? Icon(
-              //         Icons.clear,
-              //         color: Colors.red,
-              //       )
-              //     : Icon(
-              //         Icons.check,
-              //         color: Colors.green,
-              //       ),
-              Text(
-                '${Controller.currentScoreInPercentage() == 0 && Controller.index == 0 ? "-" : Controller.currentScoreInPercentage().toString()} %',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 25.0,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class QuizAppBar extends StatelessWidget implements PreferredSizeWidget {
-  @override
-  Size get preferredSize => const Size.fromHeight(100);
-
-  const QuizAppBar({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0.0,
-      leading: Builder(
-        builder: (BuildContext context) {
-          return IconButton(
-            icon: const Icon(Icons.clear),
-            onPressed: () {
-              Future<void> _showMyDialog() async {
-                return showDialog<void>(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text('Quitter le QCM'),
-                      content: SingleChildScrollView(
-                        child: ListBody(
-                          children: <Widget>[
-                            Text(
-                                'En quittant le QCM, votre progression sera perdue.'),
-                          ],
-                        ),
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                            child: Text(
-                              'Continuer',
-                              style: TextStyle(color: Colors.blue),
-                            ),
-                            onPressed: () {}),
-                        TextButton(
-                          child: Text(
-                            'Quitter',
-                            style: TextStyle(color: Colors.red),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => HomeView(),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-              }
-
-              _showMyDialog();
-            },
-          );
-        },
-      ),
-    );
-  }
-}
-
 class AnswersList extends StatelessWidget {
-  const AnswersList({Key key, @required this.answers}) : super(key: key);
+  const AnswersList({Key key, @required this.question}) : super(key: key);
 
-  final List<String> answers;
+  final Question question;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListView(
-          children: this.answers.asMap().entries.map(
+          children: this.question.answers.asMap().entries.map(
         (entry) {
           int idx = entry.key;
           String answer = entry.value;
 
-          return Answer(text: answer, idx: idx);
+          return Answer(question: question, idx: idx);
         },
       ).toList()),
     );
@@ -302,11 +171,11 @@ class AnswersList extends StatelessWidget {
 class Answer extends StatefulWidget {
   const Answer({
     Key key,
-    @required this.text,
+    @required this.question,
     @required this.idx,
   }) : super(key: key);
 
-  final String text;
+  final Question question;
   final int idx;
 
   @override
@@ -319,27 +188,26 @@ class _AnswerState extends State<Answer> {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8.0),
       child: RaisedButton(
-          elevation: Controller.isSelected(widget.idx) ? 1 : 0,
+          elevation:
+              widget.question.selectedAnswers.contains(widget.idx) ? 1 : 0,
           shape: StadiumBorder(
             side: BorderSide(
                 width: 2,
-                color: Controller.isSelected(widget.idx)
-                    ? Controller.currentAnswersPoint[widget.idx] != null
-                        ? int.parse(Controller
-                                    .currentAnswersPoint[widget.idx]) >
-                                0
+                color: widget.question.selectedAnswers.contains(widget.idx)
+                    ? widget.question.points[widget.idx] != null
+                        ? widget.question.points[widget.idx] > 0
                             ? Colors.green
                             : Colors.red
                         : Colors.blueAccent
                     : Colors.transparent),
           ),
-          color: Colors.white
-              .withOpacity(Controller.isSelected(widget.idx) ? 1 : .4),
+          color: Colors.white.withOpacity(
+              widget.question.selectedAnswers.contains(widget.idx) ? 1 : .4),
           padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
           child: Row(
             children: [
-              Controller.currentAnswersPoint[widget.idx] != null
-                  ? int.parse(Controller.currentAnswersPoint[widget.idx]) > 0
+              widget.question.points[widget.idx] != null
+                  ? widget.question.points[widget.idx] > 0
                       ? Icon(Icons.check, size: 20.0, color: Colors.green)
                       : Icon(Icons.clear, size: 20.0, color: Colors.red)
                   : Container(
@@ -349,16 +217,17 @@ class _AnswerState extends State<Answer> {
                         color: Colors.white,
                         shape: BoxShape.circle,
                       ),
-                      child: Controller.isSelected(widget.idx)
+                      child: widget.question.selectedAnswers
+                              .contains(widget.idx)
                           ? Center(
                               child: Container(
                                 margin: EdgeInsets.all(5.0),
                                 decoration: BoxDecoration(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(10.0)),
-                                  color: Controller.isSelected(widget.idx) &&
-                                          Controller.currentAnswersPoint[
-                                                  widget.idx] !=
+                                  color: widget.question.selectedAnswers
+                                              .contains(widget.idx) &&
+                                          widget.question.points[widget.idx] !=
                                               null
                                       ? Colors.transparent
                                       : Colors.blueAccent,
@@ -373,9 +242,9 @@ class _AnswerState extends State<Answer> {
               ),
               Expanded(
                 child: Text(
-                  widget.text,
+                  widget.question.question,
                   style: TextStyle(
-                    color: Controller.isSelected(widget.idx)
+                    color: widget.question.selectedAnswers.contains(widget.idx)
                         ? Colors.blue[900]
                         : Colors.blueGrey[600],
                     fontSize: 16.0,
@@ -384,12 +253,10 @@ class _AnswerState extends State<Answer> {
               ),
               SizedBox(width: 10.0),
               Text(
-                Controller.currentAnswersPoint[widget.idx] ?? '',
+                widget.question.points[widget.idx] ?? '',
                 style: TextStyle(
                   fontSize: 18.0,
-                  color: int.parse(Controller.currentAnswersPoint[widget.idx] ??
-                              '0') >
-                          0
+                  color: widget.question.points[widget.idx] > 0
                       ? Colors.green
                       : Colors.red,
                 ),
@@ -398,7 +265,7 @@ class _AnswerState extends State<Answer> {
           ),
           onPressed: () {
             setState(() {
-              Controller.selectAnswer(widget.idx);
+              widget.question.toggleAnswer(widget.idx);
             });
           }),
     );
