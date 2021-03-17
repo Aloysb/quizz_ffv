@@ -38,10 +38,17 @@ class _QuizzViewState extends StateMVC {
               Expanded(
                 child: PageView(
                   controller: _pageController,
+<<<<<<< Updated upstream
                   children: Controller.questions
                       .map(
                         (question) => QuestionCard(question: question),
                       )
+=======
+                  children: Controller.questions[Controller.index]['answers']
+                      .asMap()
+                      .entries
+                      .map<Widget>((entry) => QuestionArea(index: entry.key))
+>>>>>>> Stashed changes
                       .toList(),
                 ),
               ),
@@ -71,20 +78,37 @@ class _QuizzViewState extends StateMVC {
       ),
       onPressed: () {
         setState(() {
+<<<<<<< Updated upstream
           Controller.validateQuestion(1);
           // Controller.isQuestionValidated(1)
           // ? Controller.getNextQuestion()
           // : Controller.validateAnswers();
+=======
+          // _pageController.jumpToPage(Controller.index + 1);
+          Controller.questions[0]['points']
+              ? Controller.getNextQuestion()
+              : Controller.validateAnswers();
+>>>>>>> Stashed changes
         });
       },
     );
   }
 }
 
+<<<<<<< Updated upstream
 class QuestionCard extends StatelessWidget {
   const QuestionCard({Key key, Question this.question}) : super(key: key);
 
   final Question question;
+=======
+class QuestionArea extends StatelessWidget {
+  const QuestionArea({
+    @required int this.index,
+    Key key,
+  }) : super(key: key);
+>>>>>>> Stashed changes
+
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +144,11 @@ class QuestionCard extends StatelessWidget {
               decoration: BoxDecoration(),
               child: Center(
                 child: Text(
+<<<<<<< Updated upstream
                   question.question,
+=======
+                  Controller.questions[Controller.index]['question'],
+>>>>>>> Stashed changes
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 22.0,

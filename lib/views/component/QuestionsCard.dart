@@ -36,16 +36,16 @@ class QuestionsCard extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Image.asset(
                   this.imagePath,
-                  height: 120.0,
+                  height: 180.0,
                   width: double.infinity,
                   fit: BoxFit.cover,
                 ),
               ),
               Container(
                 width: double.infinity,
-                color: Colors.black.withOpacity(.3),
+                color: Colors.black.withOpacity(.2),
                 alignment: Alignment.center,
-                height: 120.0,
+                height: 180.0,
                 child: Text(
                   '${this.numberOfQuestions.toString()} questions',
                   style: TextStyle(

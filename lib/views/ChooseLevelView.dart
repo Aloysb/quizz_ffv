@@ -13,7 +13,7 @@ class ChooseLevelView extends StatelessWidget {
       body: ListView(
         children: [
           LevelCard(
-            imagePath: 'assets/images/BI.jpeg',
+            imagePath: 'assets/images/BI.jpg',
             level: 'BI',
           ),
           LevelCard(

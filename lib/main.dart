@@ -16,6 +16,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'FFVL QCM Entrainement',
       home: HomeView(),
+      color: Colors.white,
     );
   }
 }

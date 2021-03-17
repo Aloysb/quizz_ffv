@@ -35,9 +35,6 @@ class Model {
           CsvToListConverter(fieldDelimiter: ',', eol: '\n')
               .convert(dataFromCsv);
       Model._data = csvTable;
-      this._questionIndex = 1;
-      Model._answersIndexes = [2, 4, 6, 8];
-      Model._pointsIndexes = [3, 5, 7, 9];
     }
 
     loadAsset();
@@ -76,8 +73,8 @@ class Model {
 
     List<int> randomIndexes = new List<int>.generate(
         questionsList.length, (int index) => index); // [0, 1, 4]
-    randomIndexes.shuffle();
 
+    randomIndexes.shuffle();
     _currentQuiz = randomIndexes
         .sublist(0, length + 1)
         .map((index) => questionsList[index])
@@ -96,7 +93,5 @@ class Model {
           points: points,
           answers: answers);
     }).toList();
-
-    return _currentQuiz;
   }
 }
