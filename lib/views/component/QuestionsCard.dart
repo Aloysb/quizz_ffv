@@ -21,7 +21,7 @@ class QuestionsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(10.0),
+      margin: EdgeInsets.all(0.0),
       clipBehavior: Clip.antiAlias,
       elevation: 5,
       child: Container(
@@ -43,7 +43,18 @@ class QuestionsCard extends StatelessWidget {
               ),
               Container(
                 width: double.infinity,
-                color: Colors.black.withOpacity(.2),
+                // color: Colors.black.withOpacity(.2),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  gradient: RadialGradient(
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withOpacity(.3),
+                    ],
+                    radius: 1,
+                    // stops: [0.0, 0.5],
+                  ),
+                ),
                 alignment: Alignment.center,
                 height: 180.0,
                 child: Text(

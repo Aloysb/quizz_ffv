@@ -5,11 +5,11 @@ class ChooseQuestionsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.lightBlue[900],
-        title: Text('Nombre de questions ?'),
-      ),
+      backgroundColor: Colors.blueGrey[700],
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
       body: ListView(
+        padding: EdgeInsets.only(top: 0),
         children: [
           QuestionsCard(
             imagePath: 'assets/images/10.jpeg',

@@ -11,6 +11,7 @@ class HomeView extends StatelessWidget {
       body: Container(
         color: Colors.white,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
               child: Stack(
@@ -38,8 +39,8 @@ class HomeView extends StatelessWidget {
                       gradient: LinearGradient(
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
-                        colors: [Colors.white, Colors.transparent],
-                        stops: [0.1, 1.0],
+                        colors: [Colors.grey[900], Colors.transparent],
+                        stops: [0.1, 0.6],
                       ),
                     ),
                   ),
@@ -61,48 +62,58 @@ class HomeView extends StatelessWidget {
             ),
             Expanded(
               child: Container(
+                color: Colors.grey[900],
                 width: 250.0,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    RaisedButton(
-                      child: Text(
-                        'Nouveau QCM',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          color: Colors.white,
-                        ),
-                      ),
-                      color: Colors.lightBlue[900],
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ChooseCategoryView(),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      RaisedButton(
+                        shape: StadiumBorder(),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+                        child: Text(
+                          'Démarrer QCM',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            color: Colors.white,
                           ),
-                        );
-                      },
-                    ),
-                    RaisedButton(
-                      color: Colors.lightBlue[800],
-                      child: Text(
-                        'À propos',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          color: Colors.white,
                         ),
+                        color: Colors.orange[900],
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChooseCategoryView(),
+                            ),
+                          );
+                        },
                       ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AboutView(),
+                      RaisedButton(
+                        shape: StadiumBorder(),
+                        color: Colors.grey[500],
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+                        child: Text(
+                          'À propos',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            color: Colors.white,
                           ),
-                        );
-                      },
-                    ),
-                  ],
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AboutView(),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

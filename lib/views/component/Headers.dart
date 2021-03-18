@@ -41,7 +41,7 @@ class Headers extends StatelessWidget {
                 ),
               ),
               Text(
-                Controller.numberOfQuestions.toString(),
+                (Controller.numberOfQuestions - 1).toString(),
                 style: TextStyle(
                   fontSize: 16.0,
                   color: Colors.white70,

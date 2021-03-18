@@ -19,6 +19,7 @@ class _QuizzViewState extends StateMVC {
 
   @override
   int _currentIndex;
+  bool _isLastQuestion = false;
 
   void initState() {
     super.initState();
@@ -26,6 +27,9 @@ class _QuizzViewState extends StateMVC {
     _pageController.addListener(() {
       setState(() {
         _currentIndex = _pageController.page.toInt() + 1;
+        _isLastQuestion =
+            _pageController.page.toInt() + 1 == Controller.numberOfQuestions;
+        print(_isLastQuestion);
       });
     });
   }
@@ -45,20 +49,21 @@ class _QuizzViewState extends StateMVC {
         child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Headers(index: this._currentIndex),
-              Expanded(
-                child: PageView(
-                  controller: _pageController,
-                  children: Controller.questions
-                      .map(
-                        (question) => QuestionCard(question: question),
-                      )
-                      .toList(),
-                ),
-              ),
-              BottomButton()
-            ],
+            children: _isLastQuestion
+                ? [Container(child: Text('Finished'))]
+                : [
+                    Headers(index: this._currentIndex),
+                    Expanded(
+                      child: PageView(
+                          controller: _pageController,
+                          children: Controller.questions
+                              .map(
+                                (question) => QuestionCard(question: question),
+                              )
+                              .toList()),
+                    ),
+                    BottomButton()
+                  ],
           ),
         ),
       ),
@@ -266,7 +271,7 @@ class _AnswerState extends State<Answer> {
               ),
               Expanded(
                 child: Text(
-                  widget.question.question,
+                  widget.answer,
                   style: TextStyle(
                     color: widget.question.selectedAnswers.contains(widget.idx)
                         ? Colors.blue[900]

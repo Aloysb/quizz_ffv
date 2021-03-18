@@ -73,7 +73,6 @@ class Model {
         questionsList.length, (int index) => index); // [0, 1, 4]
 
     randomIndexes.shuffle();
-    print(length);
     _currentQuiz = randomIndexes
         .sublist(0, length + 1)
         .map((index) => questionsList[index])
