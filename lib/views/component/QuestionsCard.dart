@@ -27,7 +27,7 @@ class QuestionsCard extends StatelessWidget {
       child: Container(
         child: InkWell(
           onTap: () {
-            Controller.setNumberOfQuestions(this.numberOfQuestions);
+            Controller.setNumberOfQuestions(numberOfQuestions);
             openQuiz(context);
           },
           child: Stack(

@@ -18,6 +18,18 @@ class _QuizzViewState extends StateMVC {
   _QuizzViewState() : super(Controller());
 
   @override
+  int _currentIndex;
+
+  void initState() {
+    super.initState();
+    _currentIndex = 1;
+    _pageController.addListener(() {
+      setState(() {
+        _currentIndex = _pageController.page.toInt() + 1;
+      });
+    });
+  }
+
   void dispose() {
     _pageController.dispose();
     super.dispose();
@@ -34,7 +46,7 @@ class _QuizzViewState extends StateMVC {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Headers(),
+              // Headers(index: this._currentIndex),
               Expanded(
                 child: PageView(
                   controller: _pageController,
@@ -54,14 +66,15 @@ class _QuizzViewState extends StateMVC {
   }
 
   FlatButton BottomButton() {
+    String text = 'Valider';
+
     return FlatButton(
       padding: EdgeInsets.symmetric(
         vertical: 16.0,
       ),
       child: Center(
         child: Text(
-          'Valider',
-          // Controller.currentAnswersPoint[0] == null ? 'Valider' : 'Suivant',
+          text,
           style: TextStyle(
             color: Colors.white,
             fontSize: 24.0,
@@ -70,11 +83,17 @@ class _QuizzViewState extends StateMVC {
         ),
       ),
       onPressed: () {
+        int question_index = _pageController.page.toInt();
+
         setState(() {
-          Controller.validateQuestion(1);
-          // Controller.isQuestionValidated(1)
-          // ? Controller.getNextQuestion()
-          // : Controller.validateAnswers();
+          if (Controller.questions[question_index].isValidated()) {
+            _pageController.nextPage(
+                duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+            text = 'Valider';
+          } else {
+            text = 'Suivant';
+            Controller.validateQuestion(question_index);
+          }
         });
       },
     );
@@ -82,7 +101,8 @@ class _QuizzViewState extends StateMVC {
 }
 
 class QuestionCard extends StatelessWidget {
-  const QuestionCard({Key key, Question this.question}) : super(key: key);
+  const QuestionCard({Key key, Question this.question, int this.index})
+      : super(key: key);
 
   final Question question;
 
@@ -162,8 +182,9 @@ class AnswersList extends StatelessWidget {
         (entry) {
           int idx = entry.key;
           String answer = entry.value;
+          Question question = this.question;
 
-          return Answer(question: question, idx: idx);
+          return Answer(question: question, answer: answer, idx: idx);
         },
       ).toList()),
     );
@@ -174,10 +195,12 @@ class Answer extends StatefulWidget {
   const Answer({
     Key key,
     @required this.question,
+    @required this.answer,
     @required this.idx,
   }) : super(key: key);
 
   final Question question;
+  final String answer;
   final int idx;
 
   @override
@@ -196,7 +219,7 @@ class _AnswerState extends State<Answer> {
             side: BorderSide(
                 width: 2,
                 color: widget.question.selectedAnswers.contains(widget.idx)
-                    ? widget.question.points[widget.idx] != null
+                    ? widget.question.isValidated()
                         ? widget.question.points[widget.idx] > 0
                             ? Colors.green
                             : Colors.red
@@ -208,7 +231,7 @@ class _AnswerState extends State<Answer> {
           padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
           child: Row(
             children: [
-              widget.question.points[widget.idx] != null
+              widget.question.isValidated()
                   ? widget.question.points[widget.idx] > 0
                       ? Icon(Icons.check, size: 20.0, color: Colors.green)
                       : Icon(Icons.clear, size: 20.0, color: Colors.red)
@@ -229,8 +252,7 @@ class _AnswerState extends State<Answer> {
                                       BorderRadius.all(Radius.circular(10.0)),
                                   color: widget.question.selectedAnswers
                                               .contains(widget.idx) &&
-                                          widget.question.points[widget.idx] !=
-                                              null
+                                          widget.question.isValidated()
                                       ? Colors.transparent
                                       : Colors.blueAccent,
                                   boxShadow: [],
@@ -255,7 +277,9 @@ class _AnswerState extends State<Answer> {
               ),
               SizedBox(width: 10.0),
               Text(
-                widget.question.points[widget.idx] ?? '',
+                widget.question.isValidated()
+                    ? widget.question.points[widget.idx].toString()
+                    : '',
                 style: TextStyle(
                   fontSize: 18.0,
                   color: widget.question.points[widget.idx] > 0

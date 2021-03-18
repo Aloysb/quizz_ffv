@@ -26,6 +26,8 @@ class Controller extends ControllerMVC {
   static List<String> _levelsAvailable = ['BI', 'BP', 'BPC', 'ALL'];
   static String _category;
   static String _level;
+  static int _numberOfQuestions;
+  static int get numberOfQuestions => _numberOfQuestions;
 
   static void setCategory(String category) {
     _category = category;
@@ -35,27 +37,20 @@ class Controller extends ControllerMVC {
     _level = level;
   }
 
+  static void setNumberOfQuestions(int length) {
+    _numberOfQuestions = length;
+  }
+
   static List<Question> _questions;
   static List<Question> get questions => _questions;
 
 //Current index
-  static int _index = 0;
-  static get index => _index;
-  static int incrementIndex() => _index++;
-
-  static int _currentScore = 0;
+  static int _index;
+  static int _incrementIndex() => _index++;
+  static int _currentScore;
   static int get currentScore => _currentScore;
   static int _maxScore = 1;
   static int get maxScore => _maxScore;
-  static int _numberOfQuestions;
-  static int get numberOfQuestions => _numberOfQuestions;
-  static int currentScoreInPercentage() {
-    return ((_currentScore.toDouble() / _maxScore.toDouble()) * 100).round();
-  }
-
-  static void setNumberOfQuestions(int numberOfQuestions) {
-    _numberOfQuestions = numberOfQuestions;
-  }
 
   static void startQuiz() {
     String theme = _category;
@@ -71,6 +66,7 @@ class Controller extends ControllerMVC {
     _index = 0;
     _currentScore = 0;
     _questions = Model.initializeQuiz(theme, level, length);
+    _numberOfQuestions = _questions.length;
   }
 
   static void selectAnswer(int questionIndex, int index) {
@@ -82,17 +78,17 @@ class Controller extends ControllerMVC {
   }
 
   static void validateQuestion(int questionIndex) {
-    List<int> currentAnswersPoint = _questions[questionIndex].points;
-    List<int> selectedAnswers = _questions[questionIndex].selectedAnswers;
-    _questions[questionIndex].validateAnswers();
+    Question question = _questions[questionIndex];
 
-    _currentScore += selectedAnswers.length > 0
-        ? max(
-            selectedAnswers
-                .map((answer) => currentAnswersPoint[answer])
-                .reduce((a, b) => a + b),
-            0)
-        : 0;
-    _maxScore = 6 * _index;
+    int score = question.validateAnswers();
+
+    _incrementIndex();
+    _currentScore += score;
+    _maxScore = 6 * (_index + 1);
+  }
+
+  static int getScoreInPercent() {
+    print(_maxScore);
+    return (_currentScore * 100 ~/ _maxScore);
   }
 }

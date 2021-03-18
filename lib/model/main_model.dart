@@ -41,10 +41,8 @@ class Model {
   }
 
   static List<List<dynamic>> _data;
-  int _questionIndex;
-  static List<int> _answersIndexes;
-  static List<int> _pointsIndexes;
-  static List<int> get answersIndexes => _answersIndexes;
+  static List<int> _answersIndexes = [2, 4, 6, 8];
+  static List<int> _pointsIndexes = [3, 5, 7, 9];
   static List<Question> _currentQuiz;
   static Map _csvPrefixes = {
     'général': ['A-Z'],
@@ -75,23 +73,33 @@ class Model {
         questionsList.length, (int index) => index); // [0, 1, 4]
 
     randomIndexes.shuffle();
+    print(length);
     _currentQuiz = randomIndexes
         .sublist(0, length + 1)
         .map((index) => questionsList[index])
         .toList()
-        .map((question) {
-      String id = question[0].replaceAll(new RegExp("\D"), '');
-      String question_question = question[1];
-      List<dynamic> answers =
-          _answersIndexes.map((index) => question[index]).toList();
-      List<dynamic> points =
-          _pointsIndexes.map((index) => question[index]).toList();
+        .map((question_row) {
+      String id = question_row[0].replaceAll(new RegExp("\D"), '').toString();
+      String question = question_row[1].toString();
+
+      List<String> answers = _answersIndexes
+          .map((index) => question_row[index].toString())
+          .toList()
+          .where((question) => question != '')
+          .toList();
+
+      List<int> points = _pointsIndexes
+          .map((index) {
+            return question_row[index];
+          })
+          .toList()
+          .whereType<int>()
+          .toList();
 
       return Question(
-          id: id,
-          question: question_question,
-          points: points,
-          answers: answers);
+          id: id, question: question, points: points, answers: answers);
     }).toList();
+
+    return _currentQuiz;
   }
 }

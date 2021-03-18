@@ -4,7 +4,10 @@ import 'package:quizz_ffvl/controller/main_controller.dart';
 class Headers extends StatelessWidget {
   const Headers({
     Key key,
+    int this.index,
   }) : super(key: key);
+
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +27,7 @@ class Headers extends StatelessWidget {
           Row(
             children: [
               Text(
-                'Questions ${Controller.index.toString()}',
+                'Questions ${index}',
                 style: TextStyle(
                     fontSize: 24.0,
                     fontWeight: FontWeight.w600,
@@ -48,17 +51,20 @@ class Headers extends StatelessWidget {
           ),
           Row(
             children: [
-              // Controller.currentScoreInPercentage() < 75
-              //     ? Icon(
-              //         Icons.clear,
-              //         color: Colors.red,
-              //       )
-              //     : Icon(
-              //         Icons.check,
-              //         color: Colors.green,
-              //       ),
+              Text(Controller.currentScore.toString()),
+              Text('/'),
+              Text(Controller.maxScore.toString()),
+              Controller.getScoreInPercent() < 75
+                  ? Icon(
+                      Icons.clear,
+                      color: Colors.red,
+                    )
+                  : Icon(
+                      Icons.check,
+                      color: Colors.green,
+                    ),
               Text(
-                '${Controller.currentScoreInPercentage() == 0 && Controller.index == 0 ? "-" : Controller.currentScoreInPercentage().toString()} %',
+                Controller.getScoreInPercent().toString(),
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 25.0,
