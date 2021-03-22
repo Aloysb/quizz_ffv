@@ -20,54 +20,48 @@ class QuestionsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(0.0),
-      clipBehavior: Clip.antiAlias,
-      elevation: 5,
-      child: Container(
-        child: InkWell(
-          onTap: () {
-            Controller.setNumberOfQuestions(numberOfQuestions);
-            openQuiz(context);
-          },
-          child: Stack(
-            children: [
-              Container(
-                alignment: Alignment.center,
-                child: Image.asset(
-                  this.imagePath,
-                  height: 180.0,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Container(
+    return Container(
+      height: 225.0,
+      child: InkWell(
+        onTap: () {
+          Controller.setNumberOfQuestions(numberOfQuestions);
+          openQuiz(context);
+        },
+        child: Stack(
+          children: [
+            Container(
+              height: double.infinity,
+              alignment: Alignment.center,
+              child: Image.asset(
+                this.imagePath,
                 width: double.infinity,
-                // color: Colors.black.withOpacity(.2),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  gradient: RadialGradient(
-                    colors: [
-                      Colors.transparent,
-                      Colors.black.withOpacity(.3),
-                    ],
-                    radius: 1,
-                    // stops: [0.0, 0.5],
-                  ),
-                ),
-                alignment: Alignment.center,
-                height: 180.0,
-                child: Text(
-                  '${this.numberOfQuestions.toString()} questions',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 60.0,
-                    fontFamily: 'BebasNeue',
-                  ),
+                fit: BoxFit.cover,
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              // color: Colors.black.withOpacity(.2),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                gradient: RadialGradient(
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withOpacity(.5),
+                  ],
+                  radius: 1,
                 ),
               ),
-            ],
-          ),
+              alignment: Alignment.center,
+              child: Text(
+                '${this.numberOfQuestions.toString()} questions',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 60.0,
+                  fontFamily: 'BebasNeue',
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -10,7 +10,7 @@ class ChooseLevelView extends StatelessWidget {
         backgroundColor: Colors.lightBlue[900],
         title: Text('Niveau ?'),
       ),
-      body: ListView(
+      body: Column(
         children: [
           LevelCard(
             imagePath: 'assets/images/BI.jpg',
