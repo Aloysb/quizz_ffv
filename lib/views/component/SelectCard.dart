@@ -2,19 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:quizz_ffvl/controller/main_controller.dart';
 import 'package:quizz_ffvl/views/ChooseQuestionsView.dart';
 
-class CategoryCard extends StatelessWidget {
-  const CategoryCard({Key key, this.imagePath, this.category, this.title})
-      : super(key: key);
+class SelectCard extends StatelessWidget {
+  const SelectCard({
+    Key key,
+    @required this.imagePath,
+    @required this.title,
+    @required this.onClickAction,
+    @required this.nextView,
+  }) : super(key: key);
 
   final String imagePath;
-  final String category;
   final String title;
+  final Function onClickAction;
+  final dynamic nextView;
 
-  Function openQuiz(context) {
+  Function next(context) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ChooseQuestionsView(),
+        builder: (context) => nextView,
       ),
     );
   }
@@ -28,8 +34,9 @@ class CategoryCard extends StatelessWidget {
       child: Container(
         child: InkWell(
           onTap: () {
-            Controller.setCategory(this.category);
-            openQuiz(context);
+            print('here');
+            onClickAction();
+            next(context);
           },
           child: Stack(
             children: [

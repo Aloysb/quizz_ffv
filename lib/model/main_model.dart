@@ -57,6 +57,35 @@ class Model {
     'BPC': ['M'],
     'ALL': ['A-Z']
   };
+  static const data = {
+    'category': [
+      {
+        'image': 'assets/images/meteo.jpeg',
+        'title': 'météo',
+        'value': 'meteo',
+      },
+      {
+        'image': 'assets/images/mecavol.jpeg',
+        'title': 'mécavol',
+        'value': 'flight_mechanics',
+      },
+      {
+        'image': 'assets/images/reglementation.jpg',
+        'title': 'règlementation',
+        'value': 'rules',
+      },
+      {
+        'image': 'assets/images/materiel.jpeg',
+        'title': 'matériel',
+        'value': 'gear',
+      },
+      {
+        'image': 'assets/images/exam.jpeg',
+        'title': 'géneral',
+        'value': 'all',
+      },
+    ]
+  };
 
   static Question getQuestion(int index) {
     return _currentQuiz[index];

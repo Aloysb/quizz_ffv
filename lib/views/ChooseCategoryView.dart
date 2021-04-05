@@ -1,7 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:quizz_ffvl/views/component/CategoryCard.dart';
+import 'package:quizz_ffvl/controller/main_controller.dart';
+import 'package:quizz_ffvl/model/card_information_model.dart';
+import 'package:quizz_ffvl/views/ChooseQuestionsView.dart';
+import 'package:quizz_ffvl/views/component/SelectCard.dart';
 
 class ChooseCategoryView extends StatelessWidget {
+  ChooseCategoryView({@required this.data})
+      : cards = data
+            .map((card) => CardInformation(
+                  value: card['value'],
+                  title: card['title'],
+                  image: card['image'],
+                  nextView: ChooseQuestionsView(),
+                  onClickAction: () => Controller.setCategory(card['value']),
+                ))
+            .toList();
+
+  final data;
+  final List<dynamic> cards;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,34 +27,14 @@ class ChooseCategoryView extends StatelessWidget {
         title: Text('Catégorie ?'),
       ),
       body: ListView(
-        children: [
-          CategoryCard(
-            imagePath: 'assets/images/meteo.jpeg',
-            title: 'météo',
-            category: 'météo',
-          ),
-          CategoryCard(
-            imagePath: 'assets/images/mecavol.jpeg',
-            title: 'mécavol',
-            category: 'mécavol',
-          ),
-          CategoryCard(
-            imagePath: 'assets/images/reglementation.jpg',
-            title: 'règlementation',
-            category: 'règlementation',
-          ),
-          CategoryCard(
-            imagePath: 'assets/images/materiel.jpeg',
-            title: 'matériel',
-            category: 'matériel',
-          ),
-          CategoryCard(
-            imagePath: 'assets/images/exam.jpeg',
-            title: 'général',
-            category: 'général',
-          ),
-        ],
-      ),
+          children: cards
+              .map((card) => SelectCard(
+                    title: card.title,
+                    imagePath: card.image,
+                    nextView: card.nextView,
+                    onClickAction: card.onClickAction,
+                  ))
+              .toList()),
     );
   }
 }
