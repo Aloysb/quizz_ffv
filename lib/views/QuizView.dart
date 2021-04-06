@@ -4,8 +4,8 @@ import 'package:quizz_ffvl/controller/main_controller.dart';
 
 import 'package:quizz_ffvl/model/question_class.dart';
 
-import 'package:quizz_ffvl/views/component/Headers.dart';
-import 'package:quizz_ffvl/views/component/QuizAppBar.dart';
+import 'package:quizz_ffvl/component/Headers.dart';
+import 'package:quizz_ffvl/component/QuizAppBar.dart';
 
 class QuizzView extends StatefulWidget {
   @override

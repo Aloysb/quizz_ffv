@@ -1,19 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:quizz_ffvl/controller/main_controller.dart';
-import 'package:quizz_ffvl/views/ChooseLevelView.dart';
+import 'package:quizz_ffvl/views/ChooseCategoryView.dart';
+import 'package:quizz_ffvl/views/ChooseQuestionsView.dart';
 
-class QuestionsCard extends StatelessWidget {
-  const QuestionsCard({Key key, this.imagePath, this.numberOfQuestions})
-      : super(key: key);
+class OptionCard extends StatelessWidget {
+  const OptionCard({
+    Key key,
+    @required this.imagePath,
+    @required this.title,
+    @required this.onClickAction,
+    @required this.nextView,
+  }) : super(key: key);
 
   final String imagePath;
-  final int numberOfQuestions;
+  final String title;
+  final Function onClickAction;
+  final dynamic nextView;
 
-  Function openQuiz(context) {
+  Function next(context) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ChooseLevelView(),
+        builder: (context) => ChooseQuestionsView(
+          cards: Controller.getOptions('question'),
+        ),
       ),
     );
   }
@@ -21,11 +31,12 @@ class QuestionsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 225.0,
+      height: 200.0,
       child: InkWell(
         onTap: () {
-          Controller.setNumberOfQuestions(numberOfQuestions);
-          openQuiz(context);
+          onClickAction();
+          print(nextView);
+          next(context);
         },
         child: Stack(
           children: [
@@ -53,7 +64,7 @@ class QuestionsCard extends StatelessWidget {
               ),
               alignment: Alignment.center,
               child: Text(
-                '${this.numberOfQuestions.toString()} questions',
+                this.title,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 60.0,

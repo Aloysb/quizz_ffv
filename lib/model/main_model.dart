@@ -57,8 +57,58 @@ class Model {
     'BPC': ['M'],
     'ALL': ['A-Z']
   };
-  static const data = {
+
+  static const _optionsData = {
     'category': [
+      {
+        'image': 'assets/images/meteo.jpeg',
+        'title': 'météo',
+        'value': 'meteo',
+      },
+      {
+        'image': 'assets/images/mecavol.jpeg',
+        'title': 'mécavol',
+        'value': 'flight_mechanics',
+      },
+      {
+        'image': 'assets/images/reglementation.jpg',
+        'title': 'règlementation',
+        'value': 'rules',
+      },
+      {
+        'image': 'assets/images/materiel.jpeg',
+        'title': 'matériel',
+        'value': 'gear',
+      },
+      {
+        'image': 'assets/images/exam.jpeg',
+        'title': 'géneral',
+        'value': 'all',
+      },
+    ],
+    'question': [
+      {
+        'image': 'assets/images/10.jpeg',
+        'title': '10 questions',
+        'value': '10',
+      },
+      {
+        'image': 'assets/images/30.jpeg',
+        'title': '30 questions',
+        'value': '30',
+      },
+      {
+        'image': 'assets/images/60.jpg',
+        'title': '60 questions',
+        'value': '60',
+      },
+      {
+        'image': 'assets/images/90.jpeg',
+        'title': '90 questions',
+        'value': '90',
+      },
+    ],
+    'level': [
       {
         'image': 'assets/images/meteo.jpeg',
         'title': 'météo',
@@ -86,6 +136,8 @@ class Model {
       },
     ]
   };
+
+  static optionData(String value) => _optionsData[value];
 
   static Question getQuestion(int index) {
     return _currentQuiz[index];

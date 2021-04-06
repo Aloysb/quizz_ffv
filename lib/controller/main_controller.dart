@@ -1,8 +1,9 @@
 import 'package:mvc_pattern/mvc_pattern.dart';
+import 'package:quizz_ffvl/model/card_information_model.dart';
 import 'package:quizz_ffvl/model/main_model.dart';
 import 'dart:math';
-
 import 'package:quizz_ffvl/model/question_class.dart';
+import 'package:quizz_ffvl/views/QuizView.dart';
 
 class Controller extends ControllerMVC {
   // Controller constructor
@@ -16,6 +17,47 @@ class Controller extends ControllerMVC {
   //QUIZ THEME AND LEVEL SELECTION///
   ///////////////////////////////////
 
+  static List<dynamic> _getCards(data, onClickAction) {
+    return data
+        .map((card) => CardInformation(
+              value: card['value'],
+              title: card['title'],
+              image: card['image'],
+              onClickAction: () => onClickAction(card['value']),
+            ))
+        .toList();
+  }
+
+  static getOptions(option) {
+    List<dynamic> cards;
+    Function action;
+
+    switch (option) {
+      case 'category':
+        action = (String value) => setCategory(value);
+        cards = _getCards(
+          Model.optionData('category'),
+          action,
+        );
+        return cards;
+        break;
+      case 'question':
+        action = (String value) => setCategory(value);
+        return _getCards(
+          Model.optionData('question'),
+          action,
+        );
+        break;
+      case 'levels':
+        action = (String value) => setCategory(value);
+        return _getCards(
+          Model.optionData('category'),
+          action,
+        );
+        break;
+    }
+  }
+
   static List<String> _themesAvailable = [
     'général',
     'météo',
@@ -27,6 +69,7 @@ class Controller extends ControllerMVC {
   static String _category;
   static String _level;
   static int _numberOfQuestions;
+
   static int get numberOfQuestions => _numberOfQuestions;
 
   static void setCategory(String category) {

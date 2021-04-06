@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:quizz_ffvl/controller/main_controller.dart';
 import 'package:quizz_ffvl/model/main_model.dart';
 import 'package:quizz_ffvl/views/AboutView.dart';
 import 'package:quizz_ffvl/views/ChooseCategoryView.dart';
@@ -87,7 +88,7 @@ class HomeView extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => ChooseCategoryView(
-                                data: Model.data['category'],
+                                cards: Controller.getOptions('category'),
                               ),
                             ),
                           );
