@@ -48,10 +48,10 @@ class Controller extends ControllerMVC {
           action,
         );
         break;
-      case 'levels':
+      case 'level':
         action = (String value) => setCategory(value);
         return _getCards(
-          Model.optionData('category'),
+          Model.optionData('level'),
           action,
         );
         break;

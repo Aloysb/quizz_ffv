@@ -20,11 +20,7 @@ class OptionCard extends StatelessWidget {
   Function next(context) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => ChooseQuestionsView(
-          cards: Controller.getOptions('question'),
-        ),
-      ),
+      MaterialPageRoute(builder: (context) => nextView),
     );
   }
 

@@ -98,7 +98,7 @@ class Model {
         'value': '30',
       },
       {
-        'image': 'assets/images/60.jpg',
+        'image': 'assets/images/60.jpeg',
         'title': '60 questions',
         'value': '60',
       },
@@ -110,29 +110,24 @@ class Model {
     ],
     'level': [
       {
-        'image': 'assets/images/meteo.jpeg',
-        'title': 'météo',
-        'value': 'meteo',
+        'image': 'assets/images/BI.jpg',
+        'title': 'Brevet Initial',
+        'value': 'BI',
       },
       {
-        'image': 'assets/images/mecavol.jpeg',
-        'title': 'mécavol',
-        'value': 'flight_mechanics',
+        'image': 'assets/images/BP.jpeg',
+        'title': 'Brevet Pilote',
+        'value': 'BP',
       },
       {
-        'image': 'assets/images/reglementation.jpg',
-        'title': 'règlementation',
-        'value': 'rules',
+        'image': 'assets/images/BPC.jpeg',
+        'title': 'Brevet Confirmé',
+        'value': 'BPC',
       },
       {
-        'image': 'assets/images/materiel.jpeg',
-        'title': 'matériel',
-        'value': 'gear',
-      },
-      {
-        'image': 'assets/images/exam.jpeg',
-        'title': 'géneral',
-        'value': 'all',
+        'image': 'assets/images/ALL.jpeg',
+        'title': 'Tous niveaux',
+        'value': 'ALL',
       },
     ]
   };

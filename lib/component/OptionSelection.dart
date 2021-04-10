@@ -18,16 +18,18 @@ class OptionSelection extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          ListView(
-            padding: EdgeInsets.only(top: 0),
+          Column(
+            // padding: EdgeInsets.only(top: 0),
             children: this
                 .cards
                 .map(
-                  (card) => OptionCard(
-                    imagePath: card.image,
-                    nextView: nextView,
-                    onClickAction: card.onClickAction,
-                    title: card.title,
+                  (card) => Expanded(
+                    child: OptionCard(
+                      imagePath: card.image,
+                      nextView: nextView,
+                      onClickAction: card.onClickAction,
+                      title: card.title,
+                    ),
                   ),
                 )
                 .toList(),
