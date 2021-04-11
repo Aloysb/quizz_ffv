@@ -64,7 +64,7 @@ class Headers extends StatelessWidget {
                       color: Colors.green,
                     ),
               Text(
-                Controller.getScoreInPercent().toString(),
+                Controller.getScoreInPercent().toString() + ' %',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 25.0,

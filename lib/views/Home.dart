@@ -19,7 +19,7 @@ class HomeView extends StatelessWidget {
                 alignment: Alignment.bottomCenter,
                 children: [
                   Container(
-                    height: 500.0,
+                    height: 700.0,
                     width: double.infinity,
                     child: Image.asset(
                       'assets/images/hero.jpeg',
@@ -27,7 +27,7 @@ class HomeView extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    height: 500,
+                    height: 700,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: Colors.black.withOpacity(.3),
@@ -35,12 +35,12 @@ class HomeView extends StatelessWidget {
                   ),
                   Container(
                     width: double.infinity,
-                    height: 500,
+                    height: 700,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
-                        colors: [Colors.grey[900], Colors.transparent],
+                        colors: [Colors.black, Colors.transparent],
                         stops: [0.1, 0.6],
                       ),
                     ),
@@ -48,22 +48,29 @@ class HomeView extends StatelessWidget {
                   Container(
                     height: 500,
                     padding: EdgeInsets.only(top: 120.0),
-                    child: Text(
-                      'QCM FFVL',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontFamily: 'BebasNeue',
-                        fontSize: 100.0,
-                        color: Colors.white,
-                      ),
-                    ),
+                    child: Text('QCM FFVL',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: 'BebasNeue',
+                          fontSize: 100.0,
+                          color: Colors.white,
+                        )),
                   ),
                 ],
               ),
             ),
             Expanded(
               child: Container(
-                color: Colors.grey[900],
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
+                      spreadRadius: 1.0,
+                      offset: Offset(0, -2),
+                    )
+                  ],
+                  color: Colors.black,
+                ),
                 width: 250.0,
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 50, vertical: 0),
@@ -82,7 +89,7 @@ class HomeView extends StatelessWidget {
                             color: Colors.white,
                           ),
                         ),
-                        color: Colors.orange[900],
+                        color: Colors.red,
                         onPressed: () {
                           Navigator.push(
                             context,
