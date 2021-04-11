@@ -45,11 +45,11 @@ class Model {
   static List<int> _pointsIndexes = [3, 5, 7, 9];
   static List<Question> _currentQuiz;
   static Map _csvPrefixes = {
-    'général': ['A-Z'],
-    'météo': ['A'],
-    'règlementation': ['S'],
-    'mécavol': ['E'],
-    'matériel': ['E']
+    'all': ['A-Z'],
+    'weather': ['A'],
+    'rules': ['S'],
+    'flight_physics': ['E'],
+    'gear': ['E']
   };
   static Map _csvSuffixes = {
     'BI': ['V'],
@@ -63,12 +63,12 @@ class Model {
       {
         'image': 'assets/images/meteo.jpeg',
         'title': 'météo',
-        'value': 'meteo',
+        'value': 'weather',
       },
       {
         'image': 'assets/images/mecavol.jpeg',
         'title': 'mécavol',
-        'value': 'flight_mechanics',
+        'value': 'flight_physics',
       },
       {
         'image': 'assets/images/reglementation.jpg',

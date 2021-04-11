@@ -41,7 +41,9 @@ class QuizAppBar extends StatelessWidget implements PreferredSizeWidget {
                               'Continuer',
                               style: TextStyle(color: Colors.blue),
                             ),
-                            onPressed: () {}),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            }),
                         TextButton(
                           child: Text(
                             'Quitter',

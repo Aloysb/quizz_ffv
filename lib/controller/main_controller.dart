@@ -42,14 +42,14 @@ class Controller extends ControllerMVC {
         return cards;
         break;
       case 'question':
-        action = (String value) => setCategory(value);
+        action = (String value) => setNumberOfQuestions(int.parse(value));
         return _getCards(
           Model.optionData('question'),
           action,
         );
         break;
       case 'level':
-        action = (String value) => setCategory(value);
+        action = (String value) => setLevel(value);
         return _getCards(
           Model.optionData('level'),
           action,
@@ -59,11 +59,11 @@ class Controller extends ControllerMVC {
   }
 
   static List<String> _themesAvailable = [
-    'général',
-    'météo',
-    'règlementation',
-    'mécavol',
-    'matériel'
+    'all',
+    'weather',
+    'rules',
+    'flight_physics',
+    'gear'
   ];
   static List<String> _levelsAvailable = ['BI', 'BP', 'BPC', 'ALL'];
   static String _category;
@@ -78,6 +78,7 @@ class Controller extends ControllerMVC {
 
   static void setLevel(String level) {
     _level = level;
+    startQuiz();
   }
 
   static void setNumberOfQuestions(int length) {
@@ -90,7 +91,7 @@ class Controller extends ControllerMVC {
 //Current index
   static int _index;
   static int _incrementIndex() => _index++;
-  static int _currentScore;
+  static int _currentScore = 0;
   static int get currentScore => _currentScore;
   static int _maxScore = 1;
   static int get maxScore => _maxScore;
@@ -102,6 +103,8 @@ class Controller extends ControllerMVC {
     _questions = [];
 
     if (!_themesAvailable.contains(theme) | !_levelsAvailable.contains(level)) {
+      print(theme);
+      print(level);
       print('Error, wrong theme or level');
       return;
     }
@@ -109,6 +112,7 @@ class Controller extends ControllerMVC {
     _index = 0;
     _currentScore = 0;
     _questions = Model.initializeQuiz(theme, level, length);
+    print(_questions);
     _numberOfQuestions = _questions.length;
   }
 
